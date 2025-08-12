@@ -144,8 +144,8 @@ From left to right:
 <p align="center">
 <img src="./dataset/ft/color/002.jpg" alt="Color Defect" width="200"/>
 <img src="./dataset/no-ft/color/002_pre.png" alt="Pre-trained Model" width="200"/>
-<img src="./dataset/synthetic/color/img/004.png" alt="Crack Defect" width="200"/>
-<img src="./dataset/synthetic/color/ti/004_ti.png" alt="Crack Defect" width="200"/>
+<img src="./dataset/synthetic/color/img/002.png" alt="Crack Defect" width="200"/>
+<img src="./dataset/synthetic/color/ti/002_ti.png" alt="Crack Defect" width="200"/>
 </p>
     
   
