@@ -1,25 +1,15 @@
 import argparse
-import os
 
-import matplotlib.pyplot as plt
-import PIL
-import requests
-import torch
 import torch.distributed as dist
-from config import ALLOWED_DEFECTS, DATA_PATH
-from diffusers import (DiffusionPipeline, EulerAncestralDiscreteScheduler,
-                       StableDiffusionInstructPix2PixPipeline)
-from diffusers.utils import load_image
-from src.io.dataset_loader import DefectDataset, FewShotDefectDataset
-from src.io.utils import load_dataset
-from src.utils.plots import plot_sample
 from torch.utils.data import DataLoader
 from torch.utils.data.distributed import DistributedSampler
-from torchvision import transforms
+
+from src.config import ALLOWED_DEFECTS
+from src.io.utils import load_few_shot_dataset
 
 
 def train(args):
-    dataset = load_dataset("pill", ALLOWED_DEFECTS)
+    dataset = load_few_shot_dataset("pill", ALLOWED_DEFECTS)
 
     if args.distributed:
         # Initialize distributed mode
@@ -56,7 +46,7 @@ def train(args):
 def parse_args():
     p = argparse.ArgumentParser(
         description="Run a simulation or post-process an EpisodeStats pickle "
-        "and log the metrics to a CSV file."
+                    "and log the metrics to a CSV file."
     )
     p.add_argument(
         "--distributed",

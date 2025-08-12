@@ -35,7 +35,7 @@ examples from the original dataset.
 
 **Usage:**
 
-```
+```bash
 python few_shot_sampler.py \
   --num_sample "${NUM_SAMPLES}" \
   --out_dir   "${DATASET_DIR}" \
@@ -53,7 +53,7 @@ Best for adapting the model to a custom defect dataset with minimal compute and 
 
 **Usage:**
 
-```
+```bash
 sh ./scripts/fine-tune.sh "${DEFECT_TYPE}" "${NUM_SAMPLES}"
 ```
 
@@ -66,7 +66,7 @@ Best when you want to generate defect-specific images by prompting with the lear
 
 **Usage:**
 
-```
+```bash
 sh ./scripts/fine-tune-textual-inversion.sh "${DEFECT_TYPE}" "${NUM_SAMPLES}"
 ```
 
@@ -85,7 +85,7 @@ Generates defect images using by loading the LoRA-finetuned model and/or the tex
 
 **Usage:**
 
-```
+```bash
 python inference.py \
   --num_samples "${NUM_SAMPLES}" \
   --out_dir     "${INFER_OUT_DIR}" \
@@ -110,7 +110,7 @@ Results are saved to a CSV file in out_dir.
 
 **Usage:**
 
-```
+```bash
 python evaluate.py \
   --out_dir            "${EVAL_DIR}" \
   --orig_data_dir      "${TI_DATA_DIR%*-samples}"   \
@@ -171,7 +171,7 @@ It ties together few-shot sampling, model fine-tuning, inference, and evaluation
 
 Instead of manually running each stage of the process, this script allows you to execute the complete pipeline for a given defect type and number of training samples with one command.
 
-```
+```bash
 sh run_pipeline.sh <defect_type> <num_samples>
 ```
 
@@ -204,7 +204,8 @@ it will sequentially:
 ## Installation
 
 ```bash
-git clone <repo_url>
-cd <repo_folder>
+git clone https://github.com/badnava-babak/defect-image-generation.git
+cd defect-image-generation
 pip install -r requirements.txt
+sh run_pipeline.sh
 ```

@@ -1,10 +1,9 @@
 import os
+import random
 from typing import Optional, List, Callable, Tuple
+
 from PIL import Image
 from torch.utils.data import Dataset
-import torchvision.transforms as T
-
-import random
 
 
 class DefectDataset(Dataset):
@@ -141,13 +140,10 @@ class FewShotDefectDataset(DefectDataset):
         damage_type_groups = {}
 
         for sample in all_samples:
-            key = (sample['class'])  # group by class + damage type
+            key = (sample['class'])  # group by class
             damage_type_groups.setdefault(key, []).append(sample)
 
         for group in damage_type_groups.values():
             few_shot_samples.extend(random.sample(group, min(self.nb_samples, len(group))))
 
         return few_shot_samples
-
-
-

@@ -1,23 +1,10 @@
-from diffusers import StableDiffusionXLPipeline
-import torch
-from src.io.utils import load_few_shot_dataset
-from torchvision import transforms
-import os
-from src.config import DATA_PATH, ALLOWED_DEFECTS
-from src.io.dataset_loader import DefectDataset, FewShotDefectDataset
-from src.utils.plots import plot_sample
 import argparse
-from torch.utils.data import DataLoader
 
-from torch.utils.data.distributed import DistributedSampler
-import torch.distributed as dist
-import matplotlib.pyplot as plt
-
-from diffusers.utils import load_image
-import PIL
 import torch
-from diffusers import StableDiffusionInstructPix2PixPipeline, EulerAncestralDiscreteScheduler
-from diffusers import DiffusionPipeline
+from diffusers import StableDiffusionXLPipeline
+
+from src.config import ALLOWED_DEFECTS
+from src.io.utils import load_few_shot_dataset
 
 
 def generate_samples(args, dataset, pipe, img_postfix):
@@ -27,7 +14,6 @@ def generate_samples(args, dataset, pipe, img_postfix):
     """
     from pathlib import Path
     from PIL import Image
-    import json
     from tqdm import tqdm
     import torch
     import numpy as np
@@ -91,17 +77,17 @@ def generate_samples(args, dataset, pipe, img_postfix):
         mask_pil = _to_pil(mask)
 
         gen_kwargs = dict(prompt=prompt,
-                            num_inference_steps=250,
-                            guidance_scale=1.,
-                            image=init_pil,
-                            mask_image=mask_pil,
-                            strength=1.
-                            )
+                          num_inference_steps=250,
+                          guidance_scale=1.,
+                          image=init_pil,
+                          mask_image=mask_pil,
+                          strength=1.
+                          )
 
         try:
             result = pipe(**gen_kwargs).images[0]
         except Exception as e:
-            print(f"[WARN] Generation failed at idx={idx-1}: {e}")
+            print(f"[WARN] Generation failed at idx={idx - 1}: {e}")
             continue
 
         produced += 1
@@ -122,21 +108,20 @@ def generate_samples(args, dataset, pipe, img_postfix):
         print(f"[WARN] Only produced {produced} samples (requested {args.num_samples}). Not enough matching items.")
 
 
-
 def inference(args):
     dataset = load_few_shot_dataset("pill", ALLOWED_DEFECTS)
 
     model_id = "stabilityai/stable-diffusion-xl-base-1.0"
     pipe = StableDiffusionXLPipeline.from_pretrained(
         model_id,
-        torch_dtype=torch.float32, 
+        torch_dtype=torch.float32,
         safety_checker=None,
         cache_dir='/scratch/b502b586'
     ).to("cuda")
 
     lora_weights = f"{args.lora_dir}/ft/{args.defect_type}-defect-pill-{args.lora_samples}-samples/"
     ti_weights = f"{args.lora_dir}/ti/{args.defect_type}-defect-pill-{args.lora_samples}-samples/"
-    
+
     print('Loading LORA weights!')
     pipe.load_lora_weights(lora_weights)
 
@@ -154,23 +139,23 @@ def parse_args():
     )
     p.add_argument("--num_samples", required=False, default=10,
                    help="Number of samples to generate")
-    
-    p.add_argument("--out_dir", required=False, 
+
+    p.add_argument("--out_dir", required=False,
                    default='/home/b502b586/scratch/SiemensEnergy/dataset/synthetic',
-                   help="Directory in which the generated images will be saved")    
-    
-    p.add_argument("--lora_dir", required=False, 
+                   help="Directory in which the generated images will be saved")
+
+    p.add_argument("--lora_dir", required=False,
                    default='/home/b502b586/scratch/SiemensEnergy/lora-weights',
-                   help="Directory in which LORA weights are saved")    
-    
-    p.add_argument("--lora_samples", required=False, 
+                   help="Directory in which LORA weights are saved")
+
+    p.add_argument("--lora_samples", required=False,
                    default=20,
-                   help="Number of samples used to fine tune LORA weights")    
-    
-    p.add_argument("--enable_ti", required=False, 
+                   help="Number of samples used to fine tune LORA weights")
+
+    p.add_argument("--enable_ti", required=False,
                    default=True,
                    help="If True, loads textual inversion LORA weights")
-    
+
     p.add_argument("--defect_type", required=False, default='color',
                    help="Defect type that you want to generate images: [color, scratch]")
 

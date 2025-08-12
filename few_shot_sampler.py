@@ -1,15 +1,12 @@
 import argparse
 import os
 
-import matplotlib.pyplot as plt
 import pandas as pd
-import PIL
 from datasets import load_dataset
-from src.config import ALLOWED_DEFECTS, DATA_PATH
-from src.io.dataset_loader import DefectDataset, FewShotDefectDataset
-from src.io.utils import load_few_shot_dataset
-from src.utils.plots import plot_sample
 from torchvision.utils import save_image
+
+from src.config import ALLOWED_DEFECTS
+from src.io.utils import load_few_shot_dataset
 
 
 def sample(args):
@@ -54,7 +51,7 @@ def sample(args):
 def parse_args():
     p = argparse.ArgumentParser(
         description="Run a simulation or post-process an EpisodeStats pickle "
-        "and log the metrics to a CSV file."
+                    "and log the metrics to a CSV file."
     )
     p.add_argument(
         "--num_sample",
