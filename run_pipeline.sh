@@ -48,6 +48,9 @@ echo "Inference out   : ${INFER_OUT_DIR}"
 echo "Evaluations dir : ${EVAL_DIR}"
 echo "===================="
 
+
+git clone https://github.com/huggingface/diffusers
+
 # ----------------------------
 # 1) Few-shot sampling (creates both TI and/or FT dirs, as you need)
 #    Adjust flags to your sampler as appropriate.
