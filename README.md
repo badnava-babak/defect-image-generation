@@ -142,10 +142,10 @@ From left to right:
 </ol>
 
 <p align="center">
-<img src="./dataset/ft/color/002.jpg" alt="Color Defect" width="200"/>
-<img src="./dataset/no-ft/color/002_pre.png" alt="Pre-trained Model" width="200"/>
-<img src="./dataset/synthetic/color/img/002.png" alt="Crack Defect" width="200"/>
-<img src="./dataset/synthetic/color/ti/002_ti.png" alt="Crack Defect" width="200"/>
+<img src="./dataset/ft/color/007.jpg" alt="Color Defect" width="200"/>
+<img src="./dataset/no-ft/color/007_pre.png" alt="Pre-trained Model" width="200"/>
+<img src="./dataset/synthetic/color/img/007.png" alt="Crack Defect" width="200"/>
+<img src="./dataset/synthetic/color/ti/007_ti.png" alt="Crack Defect" width="200"/>
 </p>
     
   
@@ -154,9 +154,9 @@ From left to right:
 **Sample Generated Images with Color Defect:**
 <p align="center">
   <img src="./dataset/synthetic/color/ti/001_ti.png" alt="Color Defect" width="200"/>
-    <img src="./dataset/synthetic/color/ti/008_ti.png" alt="Color Defect" width="200"/>
-    <img src="./dataset/synthetic/color/img/003.png" alt="Color Defect" width="200"/>
-    <img src="./dataset/synthetic/color/img/007.png" alt="Color Defect" width="200"/>
+    <img src="./dataset/synthetic/color/ti/003_ti.png" alt="Color Defect" width="200"/>
+    <img src="./dataset/synthetic/color/img/008.png" alt="Color Defect" width="200"/>
+    <img src="./dataset/synthetic/color/img/004.png" alt="Color Defect" width="200"/>
 </p>
 
 **Sample Generated Images with Contamination Defect:**
