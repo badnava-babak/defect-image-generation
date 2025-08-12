@@ -131,7 +131,7 @@ python evaluate.py \
 **Qualitative Evaluation:** Comparison of different methods and generated images.
 
 **Caption Used:**
-The upper left part of the white pill has three blue spot defects, which is incorrect as the proper pill should have white and red spots. This pill is the wrong type.
+The lower half of the white pill has five yellow spot defects, whereas the correct pill should have white and red spots. This pill is the wrong type.
 
 From left to right:
 <ol>
