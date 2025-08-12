@@ -13,6 +13,7 @@ This repository provides a full pipeline for:
 ## Project Structure
 
 ```
+├── report/                 # Report of the project
 ├── dataset/                # Dataset
 ├── scripts/                # Bash scripts for fine tunining
 ├── src/                    # All python codes required for data loading and others
