@@ -133,24 +133,25 @@ python evaluate.py \
 **Caption Used:**
 The upper left part of the white pill has three blue spot defects, which is incorrect as the proper pill should have white and red spots. This pill is the wrong type.
 
-<p align="center">
+<div style="display:inline-block;">
   <figure style="display:inline-block; text-align:center; margin:10px;">
-    <img src="./dataset/ft/color/002.jpg" alt="Color Defect" width="200"/>
+    <img src="./dataset/ft/color/002.jpg" alt="Color Defect" width="150"/>
     <figcaption>Original Image</figcaption>
   </figure>
   <figure style="display:inline-block; text-align:center; margin:10px;">
-    <img src="./dataset/no-ft/color/002_pre.png" alt="Pre-trained Model" width="200"/>
+    <img src="./dataset/no-ft/color/002_pre.png" alt="Pre-trained Model" width="150"/>
     <figcaption>Pretrained Model</figcaption>
   </figure>
   <figure style="display:inline-block; text-align:center; margin:10px;">
-    <img src="./dataset/synthetic/color/img/004.png" alt="Crack Defect" width="200"/>
+    <img src="./dataset/synthetic/color/img/004.png" alt="Crack Defect" width="150"/>
     <figcaption>LORA Fine-tuned</figcaption>
   </figure>
   <figure style="display:inline-block; text-align:center; margin:10px;">
-    <img src="./dataset/synthetic/color/ti/004_ti.png" alt="Crack Defect" width="200"/>
+    <img src="./dataset/synthetic/color/ti/004_ti.png" alt="Crack Defect" width="150"/>
     <figcaption>Fine-tuned TI model</figcaption>
   </figure>
-</p>
+</div>
+
 
 **Sample Generated Images with Color Defect:**
 <p align="center">
