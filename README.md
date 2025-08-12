@@ -1,0 +1,212 @@
+# Fine-Tuning and Evaluation Pipeline for Stable Diffusion XL on Defect Detection
+
+This repository provides a full pipeline for:
+
+- An efficient distributed data loader to load the dataset
+- A few-shot dataset sampler
+- A script to fine-tuning Stable Diffusion XL using LoRA and/or Textual Inversion
+- A script to generate synthetic defect images with the fine-tuned models
+- A script to evaluate generated images with standard image quality metrics
+
+---
+
+## Project Structure
+
+```
+├── dataset/                # Dataset
+├── scripts/                # Bash scripts for fine tunining
+├── src/                    # All python codes required for data loading and others
+    ├─── io/                # 
+    ├─── utils/             # 
+├── evaluate.py             # Evaluation script (ISC, FID, KID, PRC)
+├── few_shot_sampler.py     # Few-shot dataset sampler
+├── inference.py            # Image generation script
+├── run_all.py              # A bash script to run all of the steps from sampling to evaluation
+├── README.md               # Project documentation
+└── requirements.txt        # Dependencies
+```
+
+---
+
+## 1. Few-Shot Dataset Sampling
+
+The script **`few_shot_sampler.py`** allows you to create a reduced dataset by randomly sampling a specified number of
+examples from the original dataset.
+
+**Usage:**
+
+```
+python few_shot_sampler.py \
+  --num_sample "${NUM_SAMPLES}" \
+  --out_dir   "${DATASET_DIR}" \
+  --ti_dataset True
+```
+
+## 2. Fine-Tuning
+
+You can fine-tune Stable Diffusion XL in two ways:
+
+### **A. LoRA Fine-Tuning**
+
+Fine-tunes the base **Stable Diffusion XL** model using LoRA (Low-Rank Adaptation).  
+Best for adapting the model to a custom defect dataset with minimal compute and storage.
+
+**Usage:**
+
+```
+sh ./scripts/fine-tune.sh "${DEFECT_TYPE}" "${NUM_SAMPLES}"
+```
+
+---
+
+### **B. Textual Inversion Fine-Tuning**
+
+Learns new textual embeddings that represent specific defects.  
+Best when you want to generate defect-specific images by prompting with the learned token.
+
+**Usage:**
+
+```
+sh ./scripts/fine-tune-textual-inversion.sh "${DEFECT_TYPE}" "${NUM_SAMPLES}"
+```
+
+---
+
+## 3. Image Generation (Inference)
+
+Generates defect images using by loading the LoRA-finetuned model and/or the textual inversion model.
+
+**Features:**
+
+- Choose defect type (via prompt)
+- Set number of generated samples
+- Specify output directory
+- Choose whether to load learned embedding Textual Inversion
+
+**Usage:**
+
+```
+python inference.py \
+  --num_samples "${NUM_SAMPLES}" \
+  --out_dir     "${INFER_OUT_DIR}" \
+  --lora_dir    "${LORA_ROOT}" \
+  --lora_samples "${NUM_SAMPLES}" \
+  --enable_ti   True \
+  --defect_type "${DEFECT_TYPE}"
+```
+
+---
+
+## 4. Quality Evaluation of Generated Images
+
+Evaluate generated images using:
+
+- **ISC** -- Inception Score
+- **FID** -- Frechet Inception Distance
+- **KID** -- Kernel Inception Distance
+- **PRC** -- Precision & Recall for Generative Models
+
+Results are saved to a CSV file in out_dir.
+
+**Usage:**
+
+```
+python evaluate.py \
+  --out_dir            "${EVAL_DIR}" \
+  --orig_data_dir      "${TI_DATA_DIR%*-samples}"   \
+  --synthetic_data_dir "${INFER_OUT_DIR}/img" \
+  --file_name          "results_${DEFECT_TYPE}_${NUM_SAMPLES}s.csv"
+```
+
+**Quality of Generated Images Compared to the Actual Images for Color Defects**
+
+```
+| Baseline                   |   FID      |   KID    |
+|----------------------------|------------|----------|
+| Textual Inversion Model    | 299.46	  |  0.378   |
+| LORA Fine Tuned            | 300.57	  |  0.409   |
+| Pre-trained Model          | 437.56	  |  0.476   |
+```
+
+**Qualitative Evaluation:** Comparison of different methods and generated images.
+
+**Caption Used:**
+The upper left part of the white pill has three blue spot defects, which is incorrect as the proper pill should have white and red spots. This pill is the wrong type.
+
+<p align="center">
+  <figure style="display:inline-block; text-align:center; margin:10px;">
+    <img src="./dataset/ft/color/002.jpg" alt="Color Defect" width="200"/>
+    <figcaption>Original Image</figcaption>
+  </figure>
+  <figure style="display:inline-block; text-align:center; margin:10px;">
+    <img src="./dataset/no-ft/color/002_pre.png" alt="Pre-trained Model" width="200"/>
+    <figcaption>Pretrained Model</figcaption>
+  </figure>
+  <figure style="display:inline-block; text-align:center; margin:10px;">
+    <img src="./dataset/synthetic/color/img/004.png" alt="Crack Defect" width="200"/>
+    <figcaption>LORA Fine-tuned</figcaption>
+  </figure>
+  <figure style="display:inline-block; text-align:center; margin:10px;">
+    <img src="./dataset/synthetic/color/ti/004_ti.png" alt="Crack Defect" width="200"/>
+    <figcaption>Fine-tuned TI model</figcaption>
+  </figure>
+</p>
+
+**Sample Generated Images with Color Defect:**
+<p align="center">
+  <img src="./dataset/synthetic/color/ti/001_ti.png" alt="Color Defect" width="200"/>
+    <img src="./dataset/synthetic/color/ti/008_ti.png" alt="Color Defect" width="200"/>
+    <img src="./dataset/synthetic/color/img/003.png" alt="Color Defect" width="200"/>
+    <img src="./dataset/synthetic/color/img/007.png" alt="Color Defect" width="200"/>
+</p>
+
+**Sample Generated Images with Contamination Defect:**
+<p align="center">
+    <img src="./dataset/synthetic/contamination/img/004.png" alt="Color Defect" width="200"/>
+    <img src="./dataset/synthetic/contamination/img/007.png" alt="Color Defect" width="200"/>
+</p>
+
+---
+## End-to-End Defect Synthesis & Evaluation Pipeline
+The ```run_pipeline.sh``` script automates the entire workflow for generating and evaluating synthetic defect images.
+It ties together few-shot sampling, model fine-tuning, inference, and evaluation into a single command.
+
+Instead of manually running each stage of the process, this script allows you to execute the complete pipeline for a given defect type and number of training samples with one command.
+
+```
+sh run_pipeline.sh <defect_type> <num_samples>
+```
+
+it will sequentially:
+
+### 1. Few-Shot Sampling
+
+- Calls ```few_shot_sampler.py``` to create a subset of the dataset with the specified number of samples per defect type.
+
+- Generates both Textual Inversion (TI) and Fine-Tuning (FT) training splits.
+
+### 2. Fine-Tuning (LoRA)
+
+- Trains a Stable Diffusion XL LoRA model on the few-shot dataset.
+
+### 3. Textual Inversion Training
+
+- Trains a textual inversion embedding for the defect type.
+
+### 4. Inference
+
+- Uses the fine-tuned LoRA model (and optionally the TI embedding) to generate synthetic defect images.
+
+### 5. Evaluation
+
+- Runs ```evaluate.py``` to compute ISC, FID, KID, and PRC metrics between real and generated images.
+
+- Saves results in a CSV file with a descriptive filename (e.g., results_color_20s.csv).
+
+## Installation
+
+```bash
+git clone <repo_url>
+cd <repo_folder>
+pip install -r requirements.txt
+```
