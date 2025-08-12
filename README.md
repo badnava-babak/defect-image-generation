@@ -135,19 +135,19 @@ The upper left part of the white pill has three blue spot defects, which is inco
 
 <div style="display:inline-block;">
   <figure style="display:inline-block; text-align:center; margin:10px;">
-    <img src="./dataset/ft/color/002.jpg" alt="Color Defect" width="150"/>
+    <img src="./dataset/ft/color/002.jpg" alt="Color Defect" width="130"/>
     <figcaption>Original Image</figcaption>
   </figure>
   <figure style="display:inline-block; text-align:center; margin:10px;">
-    <img src="./dataset/no-ft/color/002_pre.png" alt="Pre-trained Model" width="150"/>
+    <img src="./dataset/no-ft/color/002_pre.png" alt="Pre-trained Model" width="130"/>
     <figcaption>Pretrained Model</figcaption>
   </figure>
   <figure style="display:inline-block; text-align:center; margin:10px;">
-    <img src="./dataset/synthetic/color/img/004.png" alt="Crack Defect" width="150"/>
+    <img src="./dataset/synthetic/color/img/004.png" alt="Crack Defect" width="130"/>
     <figcaption>LORA Fine-tuned</figcaption>
   </figure>
   <figure style="display:inline-block; text-align:center; margin:10px;">
-    <img src="./dataset/synthetic/color/ti/004_ti.png" alt="Crack Defect" width="150"/>
+    <img src="./dataset/synthetic/color/ti/004_ti.png" alt="Crack Defect" width="130"/>
     <figcaption>Fine-tuned TI model</figcaption>
   </figure>
 </div>
